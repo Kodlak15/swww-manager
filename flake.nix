@@ -20,6 +20,7 @@
           (pkgs.python3.withPackages (python-pkgs: [
             # Add packages here
             python-pkgs.ipython
+            python-pkgs.pyyaml
           ]))
         ];
 
