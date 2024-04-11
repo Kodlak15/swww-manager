@@ -3,6 +3,7 @@
 import os
 import sys
 import argparse
+import subprocess
 
 def setup():
     # Get the home directory path from the HOME environment variable
@@ -16,11 +17,14 @@ def setup():
     if not os.path.exists(statedir):
         os.makedirs(statedir)
 
+def set_wallpaper(image: str):
+    subprocess.run(["swww", "img", image])
+
 if __name__ == "__main__":
     # Set up the necessary directories
     setup()
 
-    # Parse command line arguments
+    # Command line arguments
     parser = argparse.ArgumentParser(
         prog="swww_manager",
         description="Command line utilities for managing wallpaper with swww (https://github.com/LGFae/swww)",
@@ -28,17 +32,9 @@ if __name__ == "__main__":
     parser.add_argument(
         "-i",
         "--image", 
-        dest="image",
-        action="store_const",
-        const="image",
+        action="store",
         help="set wallpaper as the image at the provided path",
+        metavar="",
+        required=False,
     )
     args = parser.parse_args()
-
-    # parser = argparse.ArgumentParser(description='Process some integers.')
-    # parser.add_argument('integers', metavar='N', type=int, nargs='+',
-    #                     help='an integer for the accumulator')
-    # parser.add_argument('--sum', dest='accumulate', action='store_const',
-    #                 const=sum, default=max,
-    #                 help='sum the integers (default: find the max)')
-    # args = parser.parse_args()
