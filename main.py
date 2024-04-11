@@ -38,3 +38,11 @@ if __name__ == "__main__":
         required=False,
     )
     args = parser.parse_args()
+
+    # If no arguments are passed, print the help message and exit
+    if len(sys.argv) == 1:
+        parser.print_help(sys.stderr)
+        sys.exit(1)
+
+    # Testing
+    set_wallpaper(args.image)
