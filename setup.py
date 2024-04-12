@@ -10,4 +10,5 @@ setup(
     install_requires=[ 
         "pyyaml"
     ], 
+    include_package_data=True,
 ) 
