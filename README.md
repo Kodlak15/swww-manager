@@ -19,6 +19,3 @@ main.py --next
 main.py --prev
 ```
 - Set custom configuration options (such as animations) inside config.yaml
-
-### What can I expect from this in the future?
-This is a very new project, and is not particularly robust at this point in time. It is primarily meant specifically for my own use cases on my own system, and there are almost surely bugs. My main priority is to improve the way configuration works as well as the handling of errors. That said, I would prefer to keep this as minimal as possible. I would like to be able to randomize animations and perhaps add a few other methods for setting images. This is a niche project built on top of another somewhat niche project, but I have tried to keep it general enough to where it could be useful to others who use swww. 
