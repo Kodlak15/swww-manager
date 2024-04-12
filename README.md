@@ -19,3 +19,9 @@ main.py --next
 main.py --prev
 ```
 - Set custom configuration options (such as animations) inside config.yaml
+
+### Nix
+If you use nix you can try out the project using this command:
+```
+nix run github:Kodlak15/swww-manager
+```
