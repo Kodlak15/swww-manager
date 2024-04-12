@@ -21,6 +21,7 @@
             # Add packages here
             python-pkgs.ipython
             python-pkgs.pyyaml
+            python-pkgs.setuptools
           ]))
         ];
 
