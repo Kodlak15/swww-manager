@@ -1,0 +1,9 @@
+directory: .
+index: 16
+pywal: true
+transition:
+  angle: '180'
+  duration: '0.5'
+  position: 0.7,0.9
+  step: '180'
+  type: wipe

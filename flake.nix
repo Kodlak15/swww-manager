@@ -30,5 +30,21 @@
         '';
       };
     });
+
+    packages = forEachSupportedSystem ({pkgs}: {
+      default = pkgs.python3.pkgs.buildPythonPackage rec {
+        pname = "swwwmgr";
+        version = "v0.1.0-alpha";
+
+        src = pkgs.fetchFromGitHub {
+          owner = "Kodlak15";
+          repo = "swww-manager";
+          rev = version;
+          hash = "sha256-4iJIzmHBJvRcz4aWqSAGHfYrCIi6v/PNF2ejgJ7LMJw=";
+        };
+
+        propagatedBuildInputs = with pkgs.python311Packages; [pyyaml];
+      };
+    });
   };
 }
