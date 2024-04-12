@@ -7,16 +7,22 @@ import subprocess
 import yaml
 
 def setup():
-    # Get the home directory path from the HOME environment variable
-    try:
-        homedir = os.environ["HOME"]
-    except KeyError:
-        sys.exit("No HOME environment variable found...")
+    if not os.path.exists("config.yaml"):
+        config = {
+            "directory": ".",
+            "index": 16,
+            "pywal": True,
+            "transition": {
+                "angle": "180",
+                "duration": "0.5",
+                "position": "0.7,0.9",
+                "step": "180",
+                "type": "wipe",
+            },
+        }
 
-    # Create the directory where wallpaper state will be held ($HOME/.local/swww)
-    statedir = os.path.join(homedir, ".local", "swww")
-    if not os.path.exists(statedir):
-        os.makedirs(statedir)
+        with open("config.yaml", "w") as f:
+            yaml.dump(config, f)
 
 def set_wallpaper(image: str, config: dict):
     # Use swww to change the wallpaper
