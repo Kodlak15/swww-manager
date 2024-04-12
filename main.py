@@ -19,6 +19,7 @@ def setup():
         os.makedirs(statedir)
 
 def set_wallpaper(image: str, config: dict):
+    # Use swww to change the wallpaper
     subprocess.run([
         "swww", 
         "img", 
@@ -35,16 +36,32 @@ def set_wallpaper(image: str, config: dict):
         config["transition"]["angle"],
     ], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
 
+    # If using pywal, run pywal using the new image to generate colors
     if config["pywal"]:
         subprocess.run(["wal", "-i", image, "-n"])
 
+    # Update the configuration
     directory = os.path.dirname(image)
     fname = os.path.basename(image)
-    if os.path.dirname(image) != config["directory"]:
-        config["directory"] = os.path.dirname(image)
-        config["index"] = os.listdir(directory).index(fname)
-        with open("config.yaml", "w") as f:
-            yaml.dump(config, f)
+    config["directory"] = os.path.dirname(image)
+    config["index"] = os.listdir(directory).index(fname)
+    with open("config.yaml", "w") as f:
+        yaml.dump(config, f)
+
+def set_directory(directory: str, config: dict):
+    images = os.listdir(directory)
+    image = os.path.join(directory, images[0])
+    set_wallpaper(image, config)
+
+def next_image(config: dict):
+    images = os.listdir(config["directory"])
+    image = os.path.join(config["directory"], images[(config["index"] + 1) % len(images)])
+    set_wallpaper(image, config)
+
+def prev_image(config: dict):
+    images = os.listdir(config["directory"])
+    image = os.path.join(config["directory"], images[(config["index"] - 1) % len(images)])
+    set_wallpaper(image, config)
 
 def get_config():
     with open("config.yaml", "r") as f:
@@ -67,6 +84,30 @@ if __name__ == "__main__":
         metavar="",
         required=False,
     )
+    parser.add_argument(
+        "-d",
+        "--directory", 
+        action="store",
+        help="set a new active image directory",
+        metavar="",
+        required=False,
+    )
+    parser.add_argument(
+        "-n",
+        "--next", 
+        action="store_true",
+        help="set the wallpaper as the next image in the current active directory",
+        # metavar="",
+        required=False,
+    )
+    parser.add_argument(
+        "-p",
+        "--prev", 
+        action="store_true",
+        help="set the wallpaper as the previous image in the current active directory",
+        # metavar="",
+        required=False,
+    )
     args = parser.parse_args()
 
     # Get the configuration
@@ -77,5 +118,12 @@ if __name__ == "__main__":
         parser.print_help(sys.stderr)
         sys.exit(1)
 
-    # Testing
-    set_wallpaper(args.image, config)
+    if args.image:
+        set_wallpaper(args.image, config) 
+    elif args.directory:
+        set_directory(args.directory, config) 
+    elif args.next:
+        next_image(config)
+    elif args.prev:
+        prev_image(config)
+

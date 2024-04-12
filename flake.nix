@@ -1,5 +1,5 @@
 {
-  description = "A Nix-flake-based Python development environment";
+  description = "Command line utility script for managing wallpaper with swww (https://github.com/LGFae/swww)";
 
   inputs.nixpkgs.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
 
