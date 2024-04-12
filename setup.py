@@ -8,7 +8,7 @@ setup(
     description="Command line utility script for managing wallpaper with swww (https://github.com/LGFae/swww)", 
     packages=find_packages(), 
     entry_points={
-        "console-scripts": ["swwwmgr = swwwmgr.main:main"],
+        "console_scripts": ["swwwmgr = swwwmgr.main:main"],
     },
     install_requires=[ 
         "pyyaml"
