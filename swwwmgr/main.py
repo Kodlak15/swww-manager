@@ -73,7 +73,7 @@ def get_config():
     with open("config.yaml", "r") as f:
         return yaml.safe_load(f)
 
-if __name__ == "__main__":
+def main():
     # Set up the necessary directories
     setup()
 
@@ -133,3 +133,5 @@ if __name__ == "__main__":
     elif args.prev:
         prev_image(config)
 
+if __name__ == "__main__":
+    main()
