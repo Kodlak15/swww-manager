@@ -78,8 +78,7 @@ def prev_image(config: dict):
     set_wallpaper(image, config)
 
 def get_config():
-    cfg = os.path.join(CONFIG_PATH, "config.yaml")
-    with open(cfg, "r") as f:
+    with open(CONFIG_PATH, "r") as f:
         return yaml.safe_load(f)
 
 def main():
