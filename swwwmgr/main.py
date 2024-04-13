@@ -12,10 +12,9 @@ def setup():
     if not os.path.exists(CONFIG_PATH):
         os.makedirs(CONFIG_PATH)
 
-    cfg = os.path.join(CONFIG_PATH, "config.yaml")
-    if not os.path.exists(cfg):
+    if not os.path.exists(CONFIG_PATH):
         config = {
-            "directory": CONFIG_PATH,
+            "directory": CONFIG_PATH.parent,
             "index": 16,
             "pywal": True,
             "transition": {
@@ -27,7 +26,7 @@ def setup():
             },
         }
 
-        with open("config.yaml", "w") as f:
+        with open(CONFIG_PATH, "w") as f:
             yaml.dump(config, f)
 
 def set_wallpaper(image: str, config: dict):
