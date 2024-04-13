@@ -1,5 +1,5 @@
-directory: .
-index: 16
+directory: /home/cody/nix-config/home/cody/local/denali/images/wallpaper/digital
+index: 5
 pywal: true
 transition:
   angle: '180'

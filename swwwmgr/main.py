@@ -6,10 +6,16 @@ import argparse
 import subprocess
 import yaml
 
+from swwwmgr import CONFIG_PATH
+
 def setup():
-    if not os.path.exists("config.yaml"):
+    if not os.path.exists(CONFIG_PATH):
+        os.makedirs(CONFIG_PATH)
+
+    cfg = os.path.join(CONFIG_PATH, "config.yaml")
+    if not os.path.exists(cfg):
         config = {
-            "directory": ".",
+            "directory": CONFIG_PATH,
             "index": 16,
             "pywal": True,
             "transition": {
@@ -40,11 +46,14 @@ def set_wallpaper(image: str, config: dict):
         config["transition"]["duration"],
         "--transition-angle",
         config["transition"]["angle"],
-    ], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+    ])
 
     # If using pywal, run pywal using the new image to generate colors
     if config["pywal"]:
-        subprocess.run(["wal", "-i", image, "-n"])
+        try:
+            subprocess.run(["wal", "-i", image, "-n"])
+        except FileNotFoundError:
+            print("Could not find pywal, are you sure you have it installed?", file=sys.stderr)
 
     # Update the configuration
     directory = os.path.dirname(image)
@@ -70,7 +79,8 @@ def prev_image(config: dict):
     set_wallpaper(image, config)
 
 def get_config():
-    with open("config.yaml", "r") as f:
+    cfg = os.path.join(CONFIG_PATH, "config.yaml")
+    with open(cfg, "r") as f:
         return yaml.safe_load(f)
 
 def main():
@@ -103,7 +113,6 @@ def main():
         "--next", 
         action="store_true",
         help="set the wallpaper as the next image in the current active directory",
-        # metavar="",
         required=False,
     )
     parser.add_argument(
@@ -111,7 +120,6 @@ def main():
         "--prev", 
         action="store_true",
         help="set the wallpaper as the previous image in the current active directory",
-        # metavar="",
         required=False,
     )
     args = parser.parse_args()
