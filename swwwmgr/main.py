@@ -59,7 +59,7 @@ def set_wallpaper(image: str, config: dict):
     fname = os.path.basename(image)
     config["directory"] = os.path.dirname(image)
     config["index"] = os.listdir(directory).index(fname)
-    with open("config.yaml", "w") as f:
+    with open(CONFIG_PATH, "w") as f:
         yaml.dump(config, f)
 
 def set_directory(directory: str, config: dict):
