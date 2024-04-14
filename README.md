@@ -2,7 +2,7 @@
 This is a simple utility script for managing wallpaper with swww (https://github.com/LGFae/swww). In case you are unfamiliar with swww, it is an animated wallpaper daemon for wayland. Check out the provided GitHub link to learn more about swww. This project allows you to preconfigure the behavior of swww and easily switch through images in a given directory.
 
 ### What can I do with this?
-- Set the wallpaper to any image on your system (also updates the active image directory in config.yaml)
+- Set the wallpaper to any image on your system
 ```
 swwwmgr --image /path/to/directory/image.jpg
 ```
@@ -18,7 +18,9 @@ swwwmgr --next
 ```
 swwwmgr --prev
 ```
-- Set custom configuration options (such as animations) inside config.yaml
+
+- Use pywal (https://github.com/dylanaraps/pywal) to automatically generate colors from the wallpaper upon switch
+- Set custom animations in config.yaml
 
 ### Nix
 If you use nix you can try out the project using this command:
