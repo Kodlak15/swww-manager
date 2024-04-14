@@ -1,5 +1,3 @@
-directory: /home/cody/nix-config/wallpaper/digital
-index: 18
 pywal: true
 transition:
   angle: '180'
