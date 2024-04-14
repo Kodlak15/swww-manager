@@ -5,18 +5,19 @@ import sys
 import argparse
 import subprocess
 import yaml
+from pathlib import Path
 
-from swwwmgr import CONFIG_PATH
+CONFIG_PATH = Path.home().joinpath(".config", "swwwmgr", "config.yaml")
+STATE_PATH = Path.home().joinpath(".local", "state", "swwwmgr", "state.yaml")
 
-def setup():
-    if not os.path.exists(CONFIG_PATH):
-        os.makedirs(CONFIG_PATH)
+def setup_config():
+    if not os.path.exists(CONFIG_PATH.parent):
+        os.makedirs(CONFIG_PATH.parent)
 
+    # Generate the default configuration file if one does not already exist
     if not os.path.exists(CONFIG_PATH):
         config = {
-            "directory": CONFIG_PATH.parent,
-            "index": 16,
-            "pywal": True,
+            "pywal": False,
             "transition": {
                 "angle": "180",
                 "duration": "0.5",
@@ -29,7 +30,22 @@ def setup():
         with open(CONFIG_PATH, "w") as f:
             yaml.dump(config, f)
 
-def set_wallpaper(image: str, config: dict):
+def setup_state():
+    # Create the config and state directories if they do not exist
+    print(STATE_PATH.parent)
+    if not os.path.exists(STATE_PATH.parent):
+        os.makedirs(STATE_PATH.parent)
+
+    if not os.path.exists(STATE_PATH):
+        state = {
+            "directory": str(CONFIG_PATH.parent),
+            "index": 0,
+        }
+
+        with open(STATE_PATH, "w") as f:
+            yaml.dump(state, f)
+
+def set_wallpaper(image: str, config: dict, state: dict):
     # Use swww to change the wallpaper
     subprocess.run([
         "swww", 
@@ -57,33 +73,44 @@ def set_wallpaper(image: str, config: dict):
     # Update the configuration
     directory = os.path.dirname(image)
     fname = os.path.basename(image)
-    config["directory"] = os.path.dirname(image)
-    config["index"] = os.listdir(directory).index(fname)
-    with open(CONFIG_PATH, "w") as f:
-        yaml.dump(config, f)
+    state["directory"] = os.path.dirname(image)
+    state["index"] = os.listdir(directory).index(fname)
+    with open(STATE_PATH, "w") as f:
+        yaml.dump(state, f)
 
-def set_directory(directory: str, config: dict):
+def set_directory(directory: str, config: dict, state: dict):
     images = os.listdir(directory)
     image = os.path.join(directory, images[0])
-    set_wallpaper(image, config)
+    set_wallpaper(image, config, state)
 
-def next_image(config: dict):
-    images = os.listdir(config["directory"])
-    image = os.path.join(config["directory"], images[(config["index"] + 1) % len(images)])
-    set_wallpaper(image, config)
+def next_image(config: dict, state: dict):
+    images = os.listdir(state["directory"])
+    image = os.path.join(
+        state["directory"], 
+        images[(state["index"] + 1) % len(images)]
+    )
+    set_wallpaper(image, config, state)
 
-def prev_image(config: dict):
-    images = os.listdir(config["directory"])
-    image = os.path.join(config["directory"], images[(config["index"] - 1) % len(images)])
-    set_wallpaper(image, config)
+def prev_image(config: dict, state: dict):
+    images = os.listdir(state["directory"])
+    image = os.path.join(
+        state["directory"], 
+        images[(state["index"] - 1) % len(images)]
+    )
+    set_wallpaper(image, config, state)
 
-def get_config():
+def get_config() -> dict:
     with open(CONFIG_PATH, "r") as f:
         return yaml.safe_load(f)
 
+def get_state() -> dict:
+    with open(STATE_PATH, "r") as f:
+        return yaml.safe_load(f)
+
 def main():
-    # Set up the necessary directories
-    setup()
+    # Set up the configuration and state directories
+    setup_config()
+    setup_state()
 
     # Command line arguments
     parser = argparse.ArgumentParser(
@@ -124,6 +151,7 @@ def main():
 
     # Get the configuration
     config = get_config()
+    state = get_state()
 
     # If no arguments are passed, print the help message and exit
     if len(sys.argv) == 1:
@@ -131,13 +159,13 @@ def main():
         sys.exit(1)
 
     if args.image:
-        set_wallpaper(args.image, config) 
+        set_wallpaper(args.image, config, state) 
     elif args.directory:
-        set_directory(args.directory, config) 
+        set_directory(args.directory, config, state) 
     elif args.next:
-        next_image(config)
+        next_image(config, state)
     elif args.prev:
-        prev_image(config)
+        prev_image(config, state)
 
 if __name__ == "__main__":
     main()
