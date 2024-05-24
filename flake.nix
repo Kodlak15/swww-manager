@@ -42,7 +42,7 @@
             owner = "Kodlak15";
             repo = "swww-manager";
             rev = version;
-            hash = "sha256-wwz2OVV7MJkeqlTEUgeOobsCa3QKeiUu6DblUkhTaCk=";
+            hash = "sha256-xwQnd2xivTVxns2YH/g+JPWqVVQykK9nx6DTr5CYv14=";
           };
 
           propagatedBuildInputs = with pkgs.python311Packages; [pyyaml];
