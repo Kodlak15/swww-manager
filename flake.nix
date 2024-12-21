@@ -24,18 +24,17 @@
       };
       flake = {
         packages = {
-          default = pkgs.python3.pkgs.buildPythonPackage rec {
+          default = inputs.nixpkgs.python3.pkgs.buildPythonPackage {
             pname = "swwwmgr";
-            version = "v0.1.2-alpha";
-
-            src = pkgs.fetchFromGitHub {
-              owner = "Kodlak15";
-              repo = "swww-manager";
-              rev = version;
-              hash = "sha256-xwQnd2xivTVxns2YH/g+JPWqVVQykK9nx6DTr5CYv14=";
-            };
-
-            propagatedBuildInputs = with pkgs.python311Packages; [pyyaml];
+            src = ./.;
+            # version = "v0.1.2-alpha";
+            # src = inputs.nixpkgs.fetchFromGitHub {
+            #   owner = "Kodlak15";
+            #   repo = "swww-manager";
+            #   rev = version;
+            #   hash = "sha256-xwQnd2xivTVxns2YH/g+JPWqVVQykK9nx6DTr5CYv14=";
+            # };
+            propagatedBuildInputs = with inputs.nixpkgs.python311Packages; [pyyaml];
           };
         };
       };
