@@ -20,7 +20,6 @@ def setup_config() -> None:
     # Generate the default configuration file if one does not already exist
     if not os.path.exists(CONFIG_PATH):
         config = {
-            "pywal": False,
             "transition": {
                 "angle": "180",
                 "duration": "0.5",
@@ -69,16 +68,6 @@ def set_wallpaper(image: str, config: dict, state: dict) -> None:
             config["transition"]["angle"],
         ]
     )
-
-    # If using pywal, run pywal using the new image to generate colors
-    if config["pywal"]:
-        try:
-            subprocess.run(["wal", "-i", image, "-n"])
-        except FileNotFoundError:
-            print(
-                "Could not find pywal, are you sure you have it installed?",
-                file=sys.stderr,
-            )
 
     # Update the configuration
     directory = os.path.dirname(image)
