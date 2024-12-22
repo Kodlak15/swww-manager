@@ -12,7 +12,6 @@ in {
     package = mkOption {
       type = types.package;
       default = self.packages.swwwmgr;
-      defaultText = literalExpression "pkgs.swwwmgr";
       description = ''
         The swwwmgr package to install.
       '';
