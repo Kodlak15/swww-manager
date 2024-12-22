@@ -4,24 +4,18 @@
   config,
   ...
 }: let
-  inherit (lib) mkOption types;
+  inherit (lib) mkEnableOption mkOption mkIf types;
+  cfg = config.programs.swwwmgr;
 in {
-  meta.maintainers = [
-    {
-      name = "Kodlak15";
-      email = "stanlcod15@protonmail.com";
-    }
-  ];
   options.programs.swwwmgr = {
-    enable = mkOption {
-      type = types.bool;
-      default = false;
-      description = "Whether to enable swwwmgr";
-    };
+    enable = mkEnableOption "swwwmgr";
     package = mkOption {
       type = types.package;
-      default = self.packages."x86_64-linux".swwwmgr;
-      description = "The swwwmgr package to use";
+      default = self.packages.swwwmgr;
+      defaultText = literalExpression "pkgs.swwwmgr";
+      description = ''
+        The swwwmgr package to install.
+      '';
     };
     transition = mkOption {
       type = types.attrs;
@@ -35,14 +29,15 @@ in {
       description = "Transition configuration to be passed to swww";
     };
   };
-  config = lib.mkIf config.programs.swwwmgr.enable {
-    home.file.".config/swwwmgr/config.yaml".text = ''
+  config = mkIf cfg.enable {
+    home.packages = [cfg.package];
+    xdg.configFile.".config/swwwmgr/config.yaml".text = ''
       transition:
-        angle: ${config.programs.swwwmgr.transition.angle}
-        duration: ${config.programs.swwwmgr.transition.duration}
-        position: ${config.programs.swwwmgr.transition.position}
-        step: ${config.programs.swwwmgr.transition.step}
-        type: ${config.programs.swwwmgr.transition.type}
+        angle: ${cfg.transition.angle}
+        duration: ${cfg.transition.duration}
+        position: ${cfg.transition.position}
+        step: ${cfg.transition.step}
+        type: ${cfg.transition.type}
     '';
   };
 }
