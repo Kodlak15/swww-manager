@@ -1,13 +1,11 @@
 {
-  pkgs,
   lib,
-  inputs,
   config,
   ...
 }: let
   inherit (lib) mkOption types;
 in {
-  options.swwwmgr = {
+  options.programs.swwwmgr = {
     enable = mkOption {
       type = types.bool;
       default = false;
@@ -16,13 +14,23 @@ in {
     transition = mkOption {
       type = types.attrs;
       default = {
-        angle = "180";
-        duration = "0.5";
-        position = "0.7,0.9";
-        step = "180";
-        type = "wipe";
+        angle = "45";
+        duration = "3";
+        position = "center";
+        step = "90";
+        type = "fade";
       };
-      description = "Transition configuration to be passed toswww";
+      description = "Transition configuration to be passed to swww";
     };
+  };
+  config.programs.swwwmgr = {
+    xdg.configFile."swwwmgr/config.yaml".text = ''
+      transition:
+        angle: ${config.programs.swwwmgr.transition.angle}
+        duration: ${config.programs.swwwmgr.transition.duration}
+        position: ${config.programs.swwwmgr.transition.position}
+        step: ${config.programs.swwwmgr.transition.step}
+        type: ${config.programs.swwwmgr.transition.type}
+    '';
   };
 }
