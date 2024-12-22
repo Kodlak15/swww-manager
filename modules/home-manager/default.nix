@@ -24,7 +24,7 @@ in {
     };
   };
   config = lib.mkIf config.programs.swwwmgr.enable {
-    home.file.".config/swwwmgr/config.yaml".text = ''
+    xdg.configFile."swwwmgr/config.yaml".text = ''
       transition:
         angle: ${config.programs.swwwmgr.transition.angle}
         duration: ${config.programs.swwwmgr.transition.duration}
