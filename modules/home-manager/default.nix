@@ -24,7 +24,7 @@ in {
     };
   };
   config = {
-    "${config.xdg.configHome}/swwwmgr/config.yaml".text = ''
+    home.file.".config/swwwmgr/config.yaml".text = ''
       transition:
         angle: ${config.programs.swwwmgr.transition.angle}
         duration: ${config.programs.swwwmgr.transition.duration}
