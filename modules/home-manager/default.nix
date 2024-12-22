@@ -6,6 +6,12 @@
 }: let
   inherit (lib) mkOption types;
 in {
+  meta.maintainers = [
+    {
+      name = "Kodlak15";
+      email = "stanlcod15@protonmail.com";
+    }
+  ];
   options.programs.swwwmgr = {
     enable = mkOption {
       type = types.bool;
