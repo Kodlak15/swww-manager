@@ -11,6 +11,11 @@ in {
       default = false;
       description = "Whether to enable swwwmgr";
     };
+    package = mkOption {
+      type = types.package;
+      default = self.packages."x86_64-linux".swwwmgr;
+      description = "The swwwmgr package to use";
+    };
     transition = mkOption {
       type = types.attrs;
       default = {
@@ -24,7 +29,7 @@ in {
     };
   };
   config = lib.mkIf config.programs.swwwmgr.enable {
-    xdg.configFile."swwwmgr/config.yaml".text = ''
+    home.file.".config/swwwmgr/config.yaml".text = ''
       transition:
         angle: ${config.programs.swwwmgr.transition.angle}
         duration: ${config.programs.swwwmgr.transition.duration}
