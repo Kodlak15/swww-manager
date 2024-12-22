@@ -23,7 +23,7 @@ in {
       description = "Transition configuration to be passed to swww";
     };
   };
-  config.programs.swwwmgr = {
+  config = {
     xdg.configFile."swwwmgr/config.yaml".text = ''
       transition:
         angle: ${config.programs.swwwmgr.transition.angle}
