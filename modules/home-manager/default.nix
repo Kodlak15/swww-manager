@@ -23,7 +23,7 @@ in {
       description = "Transition configuration to be passed to swww";
     };
   };
-  config = {
+  config = lib.mkIf config.programs.swwwmgr.enable {
     home.file.".config/swwwmgr/config.yaml".text = ''
       transition:
         angle: ${config.programs.swwwmgr.transition.angle}
