@@ -6,7 +6,11 @@
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
   };
 
-  outputs = inputs @ {flake-parts, ...}: let
+  outputs = inputs @ {
+    self,
+    flake-parts,
+    ...
+  }: let
     pkgs = import inputs.nixpkgs {system = "x86_64-linux";};
   in
     flake-parts.lib.mkFlake {inherit inputs;} {
