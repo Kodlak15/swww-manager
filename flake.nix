@@ -16,7 +16,7 @@
   in
     flake-parts.lib.mkFlake {inherit inputs;} {
       imports = [
-        ./modules/home-manager
+        # ./modules/home-manager
       ];
       systems = ["x86_64-linux" "aarch64-linux" "aarch64-darwin" "x86_64-darwin"];
       perSystem = {
