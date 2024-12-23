@@ -49,13 +49,6 @@ def setup_state() -> None:
 
 
 def set_wallpaper(image: str, config: dict, state: dict) -> None:
-    # state_dir = Path.home().joinpath(".local", "state", "swwwmgr")
-    # # Remove any existing symlinks in the state directory
-    # for f in state_dir.iterdir():
-    #     if f.is_symlink():
-    #         f.unlink()
-    # # Symlink the image to the state directory
-    # os.symlink(image, Path.home().joinpath(".local", "state", "swwwmgr", Path(image).name))
     # Use swww to change the wallpaper
     subprocess.run(
         [
@@ -172,12 +165,6 @@ def execute_hooks(config: dict, state: dict) -> None:
         for cmd in commands:
             cmd = cmd.replace("{image}", state["image"])
             subprocess.run(cmd, shell=True)
-    # print(f"Executing hooks: {config['hooks']}")
-    # for hook in config["hooks"]:
-    #     print(f"Executing hook: {hook}")
-    #     for cmd in hook["after_set"]:
-    #         cmd = cmd.replace("{image}", state["image"])
-    #         subprocess.run(cmd, shell=True)
 
 
 def main():
