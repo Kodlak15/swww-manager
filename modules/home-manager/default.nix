@@ -1,4 +1,3 @@
-# self: {
 {
   self,
   pkgs,
@@ -11,6 +10,8 @@
   cfg = config.programs.swwwmgr;
   package = self.packages.${system}.swwwmgr;
 in {
+  imports = [];
+
   options.programs.swwwmgr = {
     enable = mkEnableOption "swwwmgr";
     package = mkOption {
@@ -32,9 +33,16 @@ in {
       description = "Transition configuration to be passed to swww";
     };
   };
+
   config = mkIf cfg.enable {
-    # home.packages = [cfg.package];
-    xdg.configFile.".config/swwwmgr/config.yaml".text = ''
+    home.packages = [cfg.package];
+    assertions = [
+      {
+        assertion = config.home != null;
+        message = "The swwwmgr module requires home-manager to be enabled";
+      }
+    ];
+    xdg.configFile."swwwmgr/config.yaml".text = ''
       transition:
         angle: ${cfg.transition.angle}
         duration: ${cfg.transition.duration}
