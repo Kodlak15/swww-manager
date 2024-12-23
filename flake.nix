@@ -44,7 +44,7 @@
             propagatedBuildInputs = with pkgs.python312Packages; [pyyaml];
           };
         };
-        homeManagerModules.default = import ./modules/home-manager {inherit outputs;};
+        homeManagerModules.default = import ./modules/home-manager self;
       };
     };
 }
