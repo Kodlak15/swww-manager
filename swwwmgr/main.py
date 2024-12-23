@@ -42,19 +42,20 @@ def setup_state() -> None:
         state = {
             "directory": str(CONFIG_PATH.parent),
             "index": 0,
+            "image": "",
         }
         with open(STATE_PATH, "w") as f:
             yaml.dump(state, f)
 
 
 def set_wallpaper(image: str, config: dict, state: dict) -> None:
-    state_dir = Path.home().joinpath(".local", "state", "swwwmgr")
-    # Remove any existing symlinks in the state directory
-    for f in state_dir.iterdir():
-        if f.is_symlink():
-            f.unlink()
-    # Symlink the image to the state directory
-    os.symlink(image, Path.home().joinpath(".local", "state", "swwwmgr", Path(image).name))
+    # state_dir = Path.home().joinpath(".local", "state", "swwwmgr")
+    # # Remove any existing symlinks in the state directory
+    # for f in state_dir.iterdir():
+    #     if f.is_symlink():
+    #         f.unlink()
+    # # Symlink the image to the state directory
+    # os.symlink(image, Path.home().joinpath(".local", "state", "swwwmgr", Path(image).name))
     # Use swww to change the wallpaper
     subprocess.run(
         [
@@ -72,6 +73,7 @@ def set_wallpaper(image: str, config: dict, state: dict) -> None:
     fname = os.path.basename(image)
     state["directory"] = os.path.dirname(image)
     state["index"] = os.listdir(directory).index(fname)
+    state["image"] = image
     with open(STATE_PATH, "w") as f:
         yaml.dump(state, f)
     # Execute hooks
@@ -166,10 +168,16 @@ def get_args() -> argparse.Namespace:
     return parser.parse_args()
 
 def execute_hooks(config: dict, state: dict) -> None:
-    for hook in config["hooks"]:
-        for cmd in hook["after_set"]:
+    for hook, commands in config["hooks"].items():
+        for cmd in commands:
             cmd = cmd.replace("{image}", state["image"])
             subprocess.run(cmd, shell=True)
+    # print(f"Executing hooks: {config['hooks']}")
+    # for hook in config["hooks"]:
+    #     print(f"Executing hook: {hook}")
+    #     for cmd in hook["after_set"]:
+    #         cmd = cmd.replace("{image}", state["image"])
+    #         subprocess.run(cmd, shell=True)
 
 
 def main():
