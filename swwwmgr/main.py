@@ -16,7 +16,7 @@ STATE_PATH = Path.home().joinpath(".local", "state", "swwwmgr", "state.yaml")
 def setup_config() -> None:
     if not os.path.exists(CONFIG_PATH.parent):
         os.makedirs(CONFIG_PATH.parent)
-    # Generate the default configuration file if one does not already exist
+    # Generate a configuration file if one does not already exist
     if not os.path.exists(CONFIG_PATH):
         config = {
             "transition": {
@@ -25,6 +25,9 @@ def setup_config() -> None:
                 "position": "0.7,0.9",
                 "step": "180",
                 "type": "wipe",
+            },
+            "hooks": {
+                "after_set": [],
             },
         }
         with open(CONFIG_PATH, "w") as f:
@@ -45,25 +48,25 @@ def setup_state() -> None:
 
 
 def set_wallpaper(image: str, config: dict, state: dict) -> None:
+    state_dir = Path.home().joinpath(".local", "state", "swwwmgr")
+    # Remove any existing symlinks in the state directory
+    for f in state_dir.iterdir():
+        if f.is_symlink():
+            f.unlink()
+    # Symlink the image to the state directory
+    os.symlink(image, Path.home().joinpath(".local", "state", "swwwmgr", Path(image).name))
     # Use swww to change the wallpaper
     subprocess.run(
         [
-            "swww",
-            "img",
-            image,
-            "--transition-type",
-            config["transition"]["type"],
-            "--transition-pos",
-            config["transition"]["position"],
-            "--transition-step",
-            str(config["transition"]["step"]),
-            "--transition-duration",
-            str(config["transition"]["duration"]),
-            "--transition-angle",
-            str(config["transition"]["angle"]),
+            "swww", 
+            "img", image,
+            "--transition-type", config["transition"]["type"],
+            "--transition-pos", config["transition"]["position"],
+            "--transition-step", str(config["transition"]["step"]),
+            "--transition-duration", str(config["transition"]["duration"]),
+            "--transition-angle", str(config["transition"]["angle"]),
         ]
     )
-
     # Update the configuration
     directory = os.path.dirname(image)
     fname = os.path.basename(image)
@@ -71,6 +74,8 @@ def set_wallpaper(image: str, config: dict, state: dict) -> None:
     state["index"] = os.listdir(directory).index(fname)
     with open(STATE_PATH, "w") as f:
         yaml.dump(state, f)
+    # Execute hooks
+    execute_hooks(config, state)
 
 
 def set_directory(directory: str, config: dict, state: dict) -> None:
@@ -159,6 +164,12 @@ def get_args() -> argparse.Namespace:
         sys.exit(1)
 
     return parser.parse_args()
+
+def execute_hooks(config: dict, state: dict) -> None:
+    for hook in config["hooks"]:
+        for cmd in hook["after_set"]:
+            cmd = cmd.replace("${image}", state["image"])
+            subprocess.run(cmd, shell=True)
 
 
 def main():

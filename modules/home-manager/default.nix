@@ -31,6 +31,16 @@ in {
       };
       description = "Transition configuration to be passed to swww";
     };
+    hooks = mkOption {
+      type = types.attrs;
+      default = {};
+      example = {
+        after_set = [
+          "swww query --list"
+        ];
+      };
+      description = "Hooks to be executed after the wallpaper is set";
+    };
   };
 
   config = mkIf cfg.enable {
@@ -42,6 +52,9 @@ in {
         position: ${cfg.transition.position}
         step: ${cfg.transition.step}
         type: ${cfg.transition.type}
+      hooks:
+        after_set:
+          ${lib.concatMapStrings (hook: "- ${hook}\n") cfg.hooks.after_set}
     '';
   };
 }
