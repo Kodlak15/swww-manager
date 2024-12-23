@@ -11,6 +11,7 @@
     flake-parts,
     ...
   }: let
+    inherit (self) outputs;
     pkgs = import inputs.nixpkgs {system = "x86_64-linux";};
   in
     flake-parts.lib.mkFlake {inherit inputs;} {
@@ -43,7 +44,7 @@
             propagatedBuildInputs = with pkgs.python312Packages; [pyyaml];
           };
         };
-        homeManagerModules.default = import ./modules/home-manager;
+        homeManagerModules.default = import ./modules/home-manager {inherit outputs;};
       };
     };
 }
