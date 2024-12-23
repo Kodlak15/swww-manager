@@ -36,12 +36,6 @@ in {
 
   config = mkIf cfg.enable {
     home.packages = [cfg.package];
-    assertions = [
-      {
-        assertion = config.home != null;
-        message = "The swwwmgr module requires home-manager to be enabled";
-      }
-    ];
     xdg.configFile."swwwmgr/config.yaml".text = ''
       transition:
         angle: ${cfg.transition.angle}
