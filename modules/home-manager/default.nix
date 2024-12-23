@@ -7,7 +7,7 @@ self: {
   inherit (lib) mkEnableOption mkOption mkIf types;
   inherit (pkgs.stdenv.hostPlatform) system;
   cfg = config.programs.swwwmgr;
-  package = self.packages.${system}.swwwmgr;
+  package = self.packages.${system}.default;
 in {
   imports = [];
 
