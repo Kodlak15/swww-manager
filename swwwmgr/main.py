@@ -16,7 +16,6 @@ STATE_PATH = Path.home().joinpath(".local", "state", "swwwmgr", "state.yaml")
 def setup_config() -> None:
     if not os.path.exists(CONFIG_PATH.parent):
         os.makedirs(CONFIG_PATH.parent)
-
     # Generate the default configuration file if one does not already exist
     if not os.path.exists(CONFIG_PATH):
         config = {
@@ -28,23 +27,19 @@ def setup_config() -> None:
                 "type": "wipe",
             },
         }
-
         with open(CONFIG_PATH, "w") as f:
             yaml.dump(config, f)
 
 
 def setup_state() -> None:
     # Create the config and state directories if they do not exist
-    print(STATE_PATH.parent)
     if not os.path.exists(STATE_PATH.parent):
         os.makedirs(STATE_PATH.parent)
-
     if not os.path.exists(STATE_PATH):
         state = {
             "directory": str(CONFIG_PATH.parent),
             "index": 0,
         }
-
         with open(STATE_PATH, "w") as f:
             yaml.dump(state, f)
 
@@ -61,11 +56,11 @@ def set_wallpaper(image: str, config: dict, state: dict) -> None:
             "--transition-pos",
             config["transition"]["position"],
             "--transition-step",
-            config["transition"]["step"],
+            str(config["transition"]["step"]),
             "--transition-duration",
-            config["transition"]["duration"],
+            str(config["transition"]["duration"]),
             "--transition-angle",
-            config["transition"]["angle"],
+            str(config["transition"]["angle"]),
         ]
     )
 
@@ -168,15 +163,12 @@ def get_args() -> argparse.Namespace:
 
 def main():
     args = get_args()
-
     # Set up the configuration and state directories
     setup_config()
     setup_state()
-
     # Get the configuration
     config = get_config()
     state = get_state()
-
     if args.image:
         set_wallpaper(args.image, config, state)
     elif args.directory:
