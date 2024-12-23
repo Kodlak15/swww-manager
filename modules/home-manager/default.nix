@@ -36,7 +36,7 @@ in {
       default = {};
       example = {
         after_set = [
-          "swww query --list"
+          "wal -i {image}"
         ];
       };
       description = "Hooks to be executed after the wallpaper is set";

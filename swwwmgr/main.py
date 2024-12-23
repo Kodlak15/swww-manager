@@ -168,7 +168,7 @@ def get_args() -> argparse.Namespace:
 def execute_hooks(config: dict, state: dict) -> None:
     for hook in config["hooks"]:
         for cmd in hook["after_set"]:
-            cmd = cmd.replace("${image}", state["image"])
+            cmd = cmd.replace("{image}", state["image"])
             subprocess.run(cmd, shell=True)
 
 
